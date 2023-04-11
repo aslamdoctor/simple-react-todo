@@ -1,23 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import TodoForm from "./components/TodoForm";
+import TodoHeader from "./components/TodoHeader";
+import TodoList from "./components/TodoList";
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+  const [task, setTask] = useState("");
+
+  const handleCreate = (e) => {
+    e.preventDefault();
+    const id = Math.floor(Math.random() * 1000);
+    let updatedTasks = [
+      ...tasks,
+      {
+        task: task,
+        id: id,
+      },
+    ];
+    setTasks(updatedTasks);
+    setTask("");
+  };
+
+  const handleTaskChange = (e) => {
+    setTask(e.target.value);
+  };
+
+  const handleDelete = (id, e) => {
+    let updatedTasks = tasks.filter((task) => task.id !== id);
+    setTasks(updatedTasks);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="p-4 max-w-md mx-auto">
+      <TodoHeader title="Todo List" />
+      <TodoForm
+        handleCreate={handleCreate}
+        task={task}
+        handleTaskChange={handleTaskChange}
+      />
+      <TodoList
+        tasks={tasks}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 }
